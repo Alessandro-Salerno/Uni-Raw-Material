@@ -1,0 +1,110 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{parskip}
+
+\title{Guida alla compilazione ed all'esecuzione}
+\author{Alessandro Salerno}
+\date{26 Settembre 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduzione}
+
+Questo documento descrive il funzionamento di 3 modalità per la compilaizone e l'esecuzione degli esercizi del corso ``Programmazione 1" presso l'Università degli Studi di Torino. Nello specifico, questo documento è destinato all'uso da parte degli Studenti del Canale C (Partizione P-Z) a.a. 2024/2025. \par
+Tutti i metodi di compilazione descritti in questo documento fanno uso della riga di comando. Inoltre, si presume che il compilatore GCC sia già installato.  \par
+Nello specificare la sintassi dei comandi, le parentesi angolari sono state usate come placeholder per valori obbligatori, mentre le parentesi quadre sono state utilizzate come placeholder per valori opzionali.
+
+\section{Compilare direttamente con GCC}
+Per compilare un semplice programma C con GCC, è sufficiente usare il comando:
+\begin{verbatim}
+    gcc <nome-file.c> -o <nome-file>[.exe]
+\end{verbatim}
+Gli utenti di Sistemi Operativi Unix-like come Linux, BSD e macOS possono — e sono invitati a — omettere l'estensione ``.exe". \\ 
+Per esempio, dato un file sorgente «es1.c» su una macchina Windows, è possibile compilarlo con il comando:
+\begin{verbatim}
+    gcc es1.c -o es1.exe
+\end{verbatim} \\
+Infine, per avviare il file eseguibile appena generato è sufficiente inserire il nome dell'eseguibile nella riga di comando come nell'esempio:
+\footnote{Nei sistemi Unix-like, la Working Directory non è inclusa nel PATH, pertanto è necessario aggiungere il prefisso ``./" prima del nome dell'eseguibile quando si intende avviare un programma.}
+\footnote{Il metodo di esecuzione qui descritto è valido — con le dovute modifiche al percorso —  anche per gli altri metodi descritti in questo documento.}
+\begin{verbatim}
+    es1.exe
+\end{verbatim}
+
+\section{Compilare direttametne con GCC e Linker}
+È possibile generare file oggetto utilizzando GCC e generare un eseguibile in un secondo momento. Questo metodo risulta particolarmente utile per progetti più grandi.  \\
+Per farlo, è sufficiente apportare delle modifiche al comando descritto nella sezione precedente:
+\footnote{Un file oggetto — nella sua definizione più semplice — è un file che contiene codice binario riposizionabile e non eseguibile.}
+\begin{verbatim}
+    gcc -c <file-sorgente.c> -o <file-oggetto.o>
+\end{verbatim}
+Una volta generato il file oggetto, è possibile  generare un file eseguibile utilizzando un linker \footnote{Generalmente è consigliabile utilizzare un programma di Linking dedicato come ld, ma questo può risultare più arduo per gli utenti Windows e non rappresenta un valore aggiunto significativo per questi progetti.}
+:
+\begin{verbatim}
+    gcc <file-oggetto.o> -o <file-eseguibile>[.exe]
+\end{verbatim}
+
+\section{Compilare con Make}
+Make è un programma che automatizza la creazione di file che dipendono da altri file ed è particolarmente diffuso per la compilazione di software, specie se scritto in linguaggi della famiglia C. 
+\footnote{Esistono Build System come CMake che permettono la generazione di Makefile, ma sono stati omessi da questo documento per semplicità.} \par
+Per utilizzare Make è sufficiente invocare l'omonimo comando da un terminale la cui Working Directory contiene un file di nome ``Makefile" senza alcuna estensione:
+\begin{verbatim}
+    > ls
+    main.c        Makefile
+    > make
+    > ls
+    main.c        Makefile        a.out
+\end{verbatim}
+
+
+\noindent
+Make semplifica molto il processo di compilazione, ma è necessario tenere a mente alcune caratteristiche importanti:
+\begin{enumerate}
+	\item Il comportamento di un dato Makefile dipende dal codice contenuto al suo interno
+	\item Per evitare conflitti, è consigliabile creare una directory (Cartella) dedicata per ogni esercizio/progetto e copiare il Makefile al suo interno
+	\item Make potrebbe non essere sempre disponibile. È fortemente sconsigliato farne uso prima di aver appreso i comandi (compatibilmente con quanto richiesto dai Docenti)
+\end{enumerate}
+
+\subsection{Usare il Makefile allegato}
+È possibile scaricare un Makefile molto semplice \href{https://alessandro-salerno.github.io/unito-makefile/Makefile}{qui}. Questo Makefile è stato reallizzato appositamente per gli esercizi del corso ``Programmazione 1" ed esegue automaticamente il codice dopo averlo compilato. Per usarlo, è sufficiente:
+\begin{enumerate}
+	\item Scaricare il Makefile
+	\item Creare una directory (Cartella) dedicata all'esercizio
+	\item Spostare il Makefile all'interno della cartella appena creata
+	\item Creare uno o più file con estensione ``.c"
+	\item Scrivere il codice
+\end{enumerate}
+
+\noindent
+Per utilizzare lo script in un ambiente Unix-like è sufficiente eseguire il seguente comando da un terminale sito nella directory dell'esercizio \footnote{Per raggiungere una directory è possibile usare il comando ``cd".}:
+\begin{verbatim}
+    make
+\end{verbatim}
+\noindent
+Sui sistemi Windows che fanno uso di MinGW, invece, è sufficiente eseguire il seguente comando in una situazione analoga:
+\begin{verbatim}
+    mingw32-make
+\end{verbatim}
+
+\section{Tips and tricks}
+\begin{itemize}
+	\item Su Windows, è possibile aprire una finestra del prompt dei comandi in una data cartella del File Explorer usando lo shortcut CTRL + L, scrviendo ``cmd" nella barra selezionata e premendo invio
+	\item Su Windows, è possibile aprire una finestra del \href{https://learn.microsoft.com/it-it/windows/terminal/}{Nuovo Terminale di Windows} facendo tasto destro su uno spazio vuoto del File Explorer e selezionando ``Apri nel Terminale"
+	\item Il Makefile è un normale file di testo, pertanto può essere modificato con qualsiasi editor
+\end{itemize}
+
+\section{Risorse}
+\begin{itemize}
+	\item \href{https://www.corsi.univr.it/documenti/OccorrenzaIns/matdid/matdid707332.pdf}{Come scrivere Makefile}
+	\item \href{https://en.wikipedia.org/wiki/Object_file}{Pagina sui File Oggetto - Wikipedia EN}
+\end{itemize}
+
+\newpage
+\section{Crediti ed informazioni}
+Questo documento è una revisione ufficiale del materiale originale scritto dallo Studente Alessandro Salerno e distribuito liberamente sul Gruppo Telegram di riferimento in formato PDF in data 25 Settembre 2024. Il Makefile di riferimento menzionato nella sezione 4.1 è distribuito secondo i termini della licenza ```Creative Commons Zero v1.0 Universal", ulteriori informazioni sono disponibili sul \href{https://github.com/Alessandro-Salerno/unito-makefile}{Repository GitHub dedicato}.
+
+\end{document}
